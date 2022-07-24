@@ -1,10 +1,27 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import type { NextPage } from "next";
+import type { NextPage  } from "next";
+import { useRouter } from 'next/router'
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { LensButton } from "src/components/LensButton";
+import { useAccount, useSignMessage } from 'wagmi';
+import { generateChallenge, authenticate } from 'src/utils/lens'
 
 const Home: NextPage = () => {
+  const { signMessageAsync } = useSignMessage();
+  const router = useRouter()
+  useAccount({
+    onConnect: async({ address, connector, isReconnected }) => {
+      if(!isReconnected){
+        const challenge = await generateChallenge(address);
+        const signature = await signMessageAsync({ message: challenge });
+        const accessToken = await authenticate(address, signature);
+        window.sessionStorage.setItem('accessToken', accessToken);
+        router.push('/feed')
+      }
+    },
+  })
   const theme = useTheme();
   return (
     <Box
@@ -42,6 +59,7 @@ const Home: NextPage = () => {
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" marginTop="80px">
+          {/* <ConnectButton/> */}
           <LensButton />
         </Box>
       </Box>

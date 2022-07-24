@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { Avatar, Box, Typography, useTheme } from "@mui/material";
 import { ReactionBarSelector } from "@charkour/react-reactions";
 import { CustomInput } from "./CustomInput";
+import { PostingModal } from "./PostingModal";
 
 type FeedTabsProps = {
   onLatestClick: any;
@@ -24,6 +25,8 @@ const reactions = [
 ];
 
 const FeedItem = () => {
+  const [visible, setVisible] = useState(false)
+  const [reactionBarVisible, setReactionBarVisible] = useState(false)
   return (
     <Box marginTop="24px">
       <Box display="flex">
@@ -81,11 +84,11 @@ const FeedItem = () => {
               sx={{ width: 30, height: 30, bgcolor: '#3F8EF5', marginLeft:'-10px', "& img": { width: '75%', height: '75%'} }}
             />
           </Box>
-          {/* <ReactionBarSelector iconSize={20} reactions={reactions} /> */}
+          {reactionBarVisible && <ReactionBarSelector iconSize={20} reactions={reactions} />}
           <Box color="#B6B6B6" display="flex">
             <Box display="flex" justifyContent="center" alignItems="center" marginRight="16px">
               <img src="/static/images/comment-icon.svg" />
-              <Box marginLeft="8px">
+              <Box onClick={() => setReactionBarVisible(true)} marginLeft="8px">
                 Rekt
               </Box>
             </Box>
@@ -108,7 +111,8 @@ const FeedItem = () => {
         <Avatar sx={{ marginLeft: '20px' }}>
           S
         </Avatar>
-        <CustomInput placeholder="Create Comment" />
+        <CustomInput onClick={() => setVisible(true)} placeholder="Create Comment" />
+        <PostingModal visible={visible} onClose={() => setVisible(false)} />
       </Box>
     </Box>
   );

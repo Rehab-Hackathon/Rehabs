@@ -11,11 +11,11 @@ export const CustomInput: FC<TextFieldProps> = (props) => {
         fullWidth
         {...props}
         variant="standard"
+        InputProps={{ disableUnderline: true }}
         sx={{
           padding: '10px 22px',
           height: '40px',
           backgroundColor: theme.palette.background.paper,
-          border: '1px solid transparent',
           marginLeft: '16px',
           borderRadius: '12px',
           textAlign: 'center',

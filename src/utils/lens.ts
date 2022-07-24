@@ -1,21 +1,15 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  HttpLink,
-  InMemoryCache,
-  gql,
-} from '@apollo/client';
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, gql } from "@apollo/client";
 
-const API_URL = 'https://api.lens.dev/';
+const API_URL = "https://api.lens.dev/";
 
 const httpLink = new HttpLink({ uri: API_URL });
 
 const authLink = new ApolloLink((operation, forward) => {
-  const token = sessionStorage.getItem('accessToken');
+  const token = sessionStorage.getItem("accessToken");
 
   operation.setContext({
     headers: {
-      'x-access-token': token ? `Bearer ${token}` : '',
+      "x-access-token": token ? `Bearer ${token}` : "",
     },
   });
 
@@ -143,4 +137,97 @@ export const getPublications = async () => {
     query: gql(GET_PUBLICATIONS_QUERY),
   });
   return data.explorePublications.items;
+};
+
+let DEFAULT_PROFILE_QUERY = `
+query DefaultProfile($address: EthereumAddress!) {
+  defaultProfile(request: { ethereumAddress: $address}) {
+    id
+    name
+    bio
+    isDefault
+    attributes {
+      displayType
+      traitType
+      key
+      value
+    }
+    followNftAddress
+    metadata
+    handle
+    picture {
+      ... on NftImage {
+        contractAddress
+        tokenId
+        uri
+        chainId
+        verified
+      }
+      ... on MediaSet {
+        original {
+          url
+          mimeType
+        }
+      }
+    }
+    coverPicture {
+      ... on NftImage {
+        contractAddress
+        tokenId
+        uri
+        chainId
+        verified
+      }
+      ... on MediaSet {
+        original {
+          url
+          mimeType
+        }
+      }
+    }
+    ownedBy
+    dispatcher {
+      address
+      canUseRelay
+    }
+    stats {
+      totalFollowers
+      totalFollowing
+      totalPosts
+      totalComments
+      totalMirrors
+      totalPublications
+      totalCollects
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        type
+        contractAddress
+        amount {
+          asset {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+        }
+        recipient
+      }
+      ... on ProfileFollowModuleSettings {
+       type
+      }
+      ... on RevertFollowModuleSettings {
+       type
+      }
+    }
+  }
+}
+
+`;
+
+const getDefaultProfile = async (address) => {
+  const { data } = await apolloClient.query({
+    query: gql(DEFAULT_PROFILE_QUERY),
+  });
 };

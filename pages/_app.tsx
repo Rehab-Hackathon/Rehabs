@@ -3,7 +3,7 @@ import { CacheProvider } from "@emotion/react";
 import { StylesProvider } from "@mui/styles";
 import { AppThemeProvider } from "src/providers";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
-import { Web3ReactProvider } from "@web3-react/core";
+// import { Web3ReactProvider } from "@web3-react/core";
 
 import { Layout } from "src/views/common/Layout";
 import { GlobalStyles } from "src/styles/GlobalStyles";
@@ -13,8 +13,39 @@ import createEmotionCache from "src/utils/emotion/createEmotionCache";
 import type { FC } from "react";
 import type { AppProps } from "next/app";
 import type { EmotionCache } from "@emotion/react";
-import { connectors } from "src/utils/connectors";
-import { getConnectorName } from "src/utils/getConnectorName";
+// import { connectors } from "src/utils/connectors";
+// import { getConnectorName } from "src/utils/getConnectorName";
+
+import "@rainbow-me/rainbowkit/styles.css";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { publicProvider } from "wagmi/providers/public";
+
+const { chains, provider } = configureChains(
+  [chain.polygon], // you can add more chains here like chain.mainnet, chain.optimism etc.
+  [
+    jsonRpcProvider({
+      rpc: () => {
+        return {
+          http: "https://rpc.ankr.com/polygon", // go to https://www.ankr.com/protocol/ to get a free RPC for your network if you're not using Polygon
+        };
+      },
+    }),
+    publicProvider(),
+  ],
+);
+
+const { connectors } = getDefaultWallets({
+  appName: "Proof of Rekts",
+  chains,
+});
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+});
 
 // if (typeof window !== 'undefined') {
 //   ReactGA.initialize(process.env.NEXT_PUBLIC_GA)
@@ -39,27 +70,26 @@ const CustomApp: FC<CustomAppProps> = (props) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <GlobalStyles />
-      <Web3ReactProvider
-        connectors={connectors}
-        key={connectors.map(([connector]) => getConnectorName(connector)).join("__")}
-      >
-        <StylesProvider injectFirst>
-          <NextThemeProvider
-            forcedTheme="light"
-            defaultTheme="light"
-            themes={["light", "dark"]}
-            enableSystem={true}
-            enableColorScheme={false}
-            attribute="class"
-          >
-            <AppThemeProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </AppThemeProvider>
-          </NextThemeProvider>
-        </StylesProvider>
-      </Web3ReactProvider>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <StylesProvider injectFirst>
+            <NextThemeProvider
+              forcedTheme="light"
+              defaultTheme="light"
+              themes={["light", "dark"]}
+              enableSystem={true}
+              enableColorScheme={false}
+              attribute="class"
+            >
+              <AppThemeProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </AppThemeProvider>
+            </NextThemeProvider>
+          </StylesProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
     </CacheProvider>
   );
 };

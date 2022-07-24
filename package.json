@@ -31,6 +31,7 @@
     "@mui/utils": "^5.8.0",
     "@mui/x-date-pickers": "5.0.0-beta.2",
     "@mui/x-date-pickers-pro": "5.0.0-beta.2",
+    "@rainbow-me/rainbowkit": "^0.4.4",
     "@sentry/nextjs": "^6.19.7",
     "@types/amplitude-js": "^8.16.1",
     "@web3-react/coinbase-wallet": "8.0.34-beta.0",
@@ -51,7 +52,8 @@
     "next-themes": "^0.2.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-reactions": "^0.1.3"
+    "react-reactions": "^0.1.3",
+    "wagmi": "^0.5.11"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.1.6",

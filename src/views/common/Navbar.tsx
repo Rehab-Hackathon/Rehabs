@@ -3,7 +3,7 @@ import { Box, Stack, Typography, useScrollTrigger, useTheme } from "@mui/materia
 import Link from "next/link";
 import { ThemeToggleSwitch } from "src/components/ThemeToggleSwitch";
 import { ProofOfRektIcon } from "src/svgs";
-
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { BoxProps } from "@mui/material";
 
 import type { FC } from "react";
@@ -61,7 +61,7 @@ export const Navbar: FC<Props> = observer((props) => {
           </Link>
           <Box display="flex" justifyContent="flex-end" alignItems="center" pr={1} width="100%">
             <Stack direction="row" spacing={3} alignItems="center">
-              <ConnectWalletButton />
+              <ConnectButton />
             </Stack>
           </Box>
         </Box>

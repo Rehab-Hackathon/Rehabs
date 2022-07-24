@@ -16,8 +16,7 @@ const CustomChip = ({ active, onClick ,children }: CustomChipProps) => {
   const theme = useTheme();
   return (
     <Box
-      width="90px"
-      height="24px"
+      padding="4px"
       borderRadius="6px"
       marginLeft="40px"
       textAlign="center"

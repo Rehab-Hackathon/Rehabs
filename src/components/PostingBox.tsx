@@ -4,10 +4,11 @@ import { CustomInput } from "./CustomInput";
 
 type PostingBoxProps = {
   avatarURL: string
+  onClick: any
 };
 
 
-export const PostingBox = ({ avatarURL }: PostingBoxProps) => {
+export const PostingBox = ({ avatarURL, onClick }: PostingBoxProps) => {
   const theme = useTheme();
   return (
     <Box
@@ -17,6 +18,7 @@ export const PostingBox = ({ avatarURL }: PostingBoxProps) => {
       sx={{
         background: theme.palette.primary.main
       }}
+      onClick={onClick}
     >
       <Avatar sx={{ marginLeft: '20px' }}>
         S

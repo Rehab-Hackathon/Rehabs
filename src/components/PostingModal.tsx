@@ -11,12 +11,15 @@ import { PrimaryButton } from "./PrimaryButton";
 
 type PostingModalProps = {
   visible: boolean;
+  onClose: any;
 };
 
-export const PostingModal = ({ visible }: PostingModalProps) => {
+export const PostingModal = ({ visible, onClose }: PostingModalProps) => {
   const theme = useTheme();
+  const [transactionIndex, setTransactionIndex] = useState(0)
   const [chain, setChain] = useState("");
   const [token, setToken] = useState("");
+  const [post, setPost] = useState("");
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
 
   const tokenList = useMemo(() => {
@@ -33,7 +36,7 @@ export const PostingModal = ({ visible }: PostingModalProps) => {
   }, [chain]);
 
   return (
-    <Modal open onClose={() => console.log("close")}>
+    <Modal open={visible}>
       <Box
         sx={{
           position: "absolute" as "absolute",
@@ -67,6 +70,10 @@ export const PostingModal = ({ visible }: PostingModalProps) => {
             height="40px"
             color="white"
             backgroundColor={theme.palette.primary.main}
+            sx={{
+              cursor: 'pointer'
+            }}
+            onClick={() => onClose()}
           >
             <FontAwesomeIcon icon={faXmark} />
           </Box>
@@ -92,13 +99,19 @@ export const PostingModal = ({ visible }: PostingModalProps) => {
         <Box marginTop="22px">
           <TextField
             id="filled-multiline-flexible"
-            label="Multiline"
             multiline
             maxRows={4}
             minRows={4}
             fullWidth
-            // value={0}
-            // onChange={handleChange}
+            value={post}
+            onChange={(e) => setPost(e.currentTarget.value)}
+            sx={{
+              borderBottom: '0.2px solid #000000',
+              '& .MuiFilledInput-root': {
+                background: 'white'
+              }
+            }}
+            InputProps={{ disableUnderline: true }}
             variant="filled"
           />
         </Box>
@@ -129,7 +142,7 @@ export const PostingModal = ({ visible }: PostingModalProps) => {
             {/* <Dropdown /> */}
           </Box>
           <Box marginTop="60px" marginBottom="40px">
-            <TransactionTabs />
+            <TransactionTabs value={transactionIndex} onRecentClick={() => setTransactionIndex(1)} onHighLowClick={() => setTransactionIndex(0)} />
             <Dropdown
               sx={{
                 width: "100%",
@@ -140,9 +153,7 @@ export const PostingModal = ({ visible }: PostingModalProps) => {
               options={tokenList}
             />
           </Box>
-          <PrimaryButton fullWidth>
-            POST
-          </PrimaryButton>
+          <PrimaryButton fullWidth>POST</PrimaryButton>
         </Box>
       </Box>
     </Modal>

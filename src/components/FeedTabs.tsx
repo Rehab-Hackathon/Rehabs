@@ -29,7 +29,7 @@ const CustomChip = ({ active, onClick ,children }: CustomChipProps) => {
       }}
     >
       <Typography
-        fontSize={active ? '20px' : '16px'}
+        fontSize={'16px'}
         fontWeight={active ? 'bold' : 'normal'}
       >
         {children}
