@@ -4,17 +4,10 @@ import { ReactionBarSelector } from "@charkour/react-reactions";
 import { CustomInput } from "./CustomInput";
 import { PostingModal } from "./PostingModal";
 
-type FeedTabsProps = {
-  onLatestClick: any;
-  onMostRektClick: any;
-  value: number;
+type FeedProps = {
+  posts: any[]
 };
 
-type CustomChipProps = {
-  active: boolean;
-  children: any;
-  onClick: any;
-};
 
 const reactions = [
   { label: "Rekt", node: <img src="/static/images/reaction-1.svg" />, key: "Rekt" },
@@ -24,30 +17,35 @@ const reactions = [
   { label: "Bless U", node: <img src="/static/images/reaction-5.svg" />, key: "Bless U" },
 ];
 
-const FeedItem = () => {
+type FeedItemProps = {
+  post: any
+}
+
+const FeedItem = ({ post }: FeedItemProps) => {
+  console.log('post ', post)
   const [visible, setVisible] = useState(false)
   const [reactionBarVisible, setReactionBarVisible] = useState(false)
   return (
     <Box marginTop="24px">
       <Box display="flex">
         <Box>
-          <Avatar> S</Avatar>
+          <Avatar src={post?.profile?.picture?.original?.url} />
         </Box>
         <Box marginLeft="26px">
           <Box display="flex" justifyContent="space-between">
             <Box display="flex">
               <Box></Box>
               <Box>
-                <Typography fontWeight="bold">Marc Zeller</Typography>
-                <Typography>@name.lens</Typography>
+                <Typography fontWeight="bold">{post?.profile?.name}</Typography>
+                <Typography>{post?.profile?.handle}</Typography>
               </Box>
             </Box>
             <Box>1min ago</Box>
           </Box>
           <Typography marginTop="22px">
-            Hi i’m Mark, and i’m a degen i put my life saving and my son’s education funds into doge
-            last year, now i’m rekt as hell and the tuition payment is in 3 months hope my family
-            doesn’t abandon me.
+            {
+              post?.metadata?.content
+            }
           </Typography>
           <Box
             width="500px"
@@ -118,7 +116,7 @@ const FeedItem = () => {
   );
 };
 
-export const Feeds = () => {
+export const Feeds = ({ posts }: FeedProps) => {
   return (
     <Box
       padding="32px 40px"
@@ -127,9 +125,12 @@ export const Feeds = () => {
         background: "white",
       }}
     >
-      <FeedItem />
-      <FeedItem />
-      <FeedItem />
+      {posts?.map((post) => {
+        console.log('post ', post)
+        return (
+          <FeedItem post={post}  />
+        )
+      })}
     </Box>
   );
 };

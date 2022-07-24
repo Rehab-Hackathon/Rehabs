@@ -13,8 +13,9 @@ const Home: NextPage = () => {
   const theme = useTheme();
   const [visible, setVisible] = useState(false)
   const [feedIndex, setFeedIndex] = useState(0)
+  const [posts, setPosts] = useState([])
   getPublications().then((post) => {
-    console.log('post ', post)
+    setPosts(post)
   })
   return (
     <Box
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
         <Box marginTop="14px">
           <PostingBox avatarURL='' onClick={() => setVisible(true)} />
           <Box marginTop="8px">
-            <Feeds />
+            <Feeds posts={posts} />
           </Box>
         </Box>
         <PostingModal visible={visible} onClose={() => setVisible(false)} />
